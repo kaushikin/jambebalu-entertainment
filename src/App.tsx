@@ -1,0 +1,811 @@
+import { useEffect, useState } from 'react';
+import type { FormEvent } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import {
+  Menu,
+  X,
+  Phone,
+  Mail,
+  MapPin,
+  Star,
+  Sparkles,
+  CalendarCheck,
+  ArrowRight,
+  MessageCircle,
+  HeartHandshake,
+  Building2,
+  PartyPopper,
+  Music2,
+  Lightbulb,
+  Camera,
+  Trophy,
+  Users,
+  CheckCircle2,
+  Mic2,
+} from 'lucide-react';
+
+gsap.registerPlugin(ScrollTrigger);
+
+const WHATSAPP_NUMBER = '919741293742'; 
+
+const navLinks = [
+  { label: 'Home', href: '#home' },
+  { label: 'About', href: '#about' },
+  { label: 'Services', href: '#services' },
+  { label: 'Gallery', href: '#gallery' },
+  { label: 'Testimonials', href: '#testimonials' },
+  { label: 'Contact', href: '#contact' },
+];
+
+const services = [
+  {
+    title: 'Luxury Weddings',
+    description:
+      'Elegant wedding planning, décor, stage design, guest flow, and complete coordination for unforgettable celebrations.',
+    image: '/images/wedding_stage_couple.jpg',
+    icon: HeartHandshake,
+  },
+  {
+    title: 'Corporate Events',
+    description:
+      'Professional conferences, product launches, exhibitions, award nights, and branded business gatherings.',
+    image: '/images/corporate_conference.jpg',
+    icon: Building2,
+  },
+  {
+    title: 'Private Parties',
+    description:
+      'Birthdays, anniversaries, family functions, and private celebrations designed with energy and style.',
+    image: '/images/private_party_crowd.jpg',
+    icon: PartyPopper,
+  },
+  {
+    title: 'Concerts & DJ Nights',
+    description:
+      'Crowd-pulling entertainment experiences with sound, lighting, ambience, and performance coordination.',
+    image: '/images/dj_crowd.jpg',
+    icon: Music2,
+  },
+  {
+    title: 'Stage, Sound & Lighting',
+    description:
+      'Stage structures, LED walls, truss rigs, lighting effects, sound systems, and complete technical production.',
+    image: '/images/led_wall_lights.jpg',
+    icon: Lightbulb,
+  },
+  {
+    title: 'Decoration & Styling',
+    description:
+      'Premium tablescapes, themed décor, floral styling, entrance design, and picture-perfect event spaces.',
+    image: '/images/decor_tablescape.jpg',
+    icon: Sparkles,
+  },
+];
+
+const gallery = [
+  {
+    src: '/images/hero_stage_crowd.jpg',
+    title: 'Live Event Production',
+    className: 'lg:col-span-2 lg:row-span-2',
+  },
+  {
+    src: '/images/wedding_stage_couple.jpg',
+    title: 'Wedding Stage',
+    className: '',
+  },
+  {
+    src: '/images/corporate_conference.jpg',
+    title: 'Corporate Conference',
+    className: '',
+  },
+  {
+    src: '/images/dj_crowd.jpg',
+    title: 'DJ Night',
+    className: 'lg:row-span-2',
+  },
+  {
+    src: '/images/exhibition_hall.jpg',
+    title: 'Exhibition Setup',
+    className: '',
+  },
+  {
+    src: '/images/decor_tablescape.jpg',
+    title: 'Decor Styling',
+    className: '',
+  },
+  {
+    src: '/images/private_party_crowd.jpg',
+    title: 'Private Party',
+    className: 'lg:col-span-2',
+  },
+];
+
+const testimonials = [
+  {
+    name: 'Amina & Khalid',
+    event: 'Wedding Celebration',
+    text: 'Jambe Balu made our wedding feel magical. The décor, coordination, lighting, and entire flow were handled beautifully.',
+  },
+  {
+    name: 'Corporate Client',
+    event: 'Annual Business Meet',
+    text: 'The team was professional, punctual, and extremely detail-oriented. Our conference looked premium and ran smoothly.',
+  },
+  {
+    name: 'Happy Customer',
+    event: 'Private Celebration',
+    text: 'Everything exceeded our expectations. The atmosphere, music, setup, and service were absolutely amazing.',
+  },
+];
+
+const stats = [
+  {
+    value: '500+',
+    label: 'Events Managed',
+    icon: CalendarCheck,
+  },
+  {
+    value: '100+',
+    label: 'Wedding Setups',
+    icon: HeartHandshake,
+  },
+  {
+    value: '50+',
+    label: 'Corporate Clients',
+    icon: Building2,
+  },
+  {
+    value: '10+',
+    label: 'Years Experience',
+    icon: Trophy,
+  },
+];
+
+function App() {
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const closeMenu = () => setMenuOpen(false);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.from('.hero-kicker', {
+        y: 30,
+        opacity: 0,
+        duration: 0.8,
+        ease: 'power3.out',
+      });
+
+      gsap.from('.hero-title', {
+        y: 50,
+        opacity: 0,
+        duration: 1,
+        delay: 0.15,
+        ease: 'power3.out',
+      });
+
+      gsap.from('.hero-copy, .hero-actions, .hero-badge', {
+        y: 35,
+        opacity: 0,
+        duration: 0.9,
+        delay: 0.35,
+        stagger: 0.15,
+        ease: 'power3.out',
+      });
+
+      gsap.utils.toArray<HTMLElement>('.reveal').forEach((element) => {
+        gsap.from(element, {
+          scrollTrigger: {
+            trigger: element,
+            start: 'top 82%',
+          },
+          y: 55,
+          opacity: 0,
+          duration: 0.9,
+          ease: 'power3.out',
+        });
+      });
+
+      gsap.utils.toArray<HTMLElement>('.reveal-scale').forEach((element) => {
+        gsap.from(element, {
+          scrollTrigger: {
+            trigger: element,
+            start: 'top 84%',
+          },
+          scale: 0.92,
+          opacity: 0,
+          duration: 0.8,
+          ease: 'power3.out',
+        });
+      });
+    });
+
+    return () => ctx.revert();
+  }, []);
+
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const formData = new FormData(e.currentTarget);
+
+    const name = formData.get('name') || '';
+    const phone = formData.get('phone') || '';
+    const eventType = formData.get('eventType') || '';
+    const message = formData.get('message') || '';
+
+    const whatsappMessage = `Hello Jambe Balu,%0A%0AI would like to enquire about an event.%0A%0AName: ${name}%0APhone: ${phone}%0AEvent Type: ${eventType}%0AMessage: ${message}`;
+
+    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${whatsappMessage}`, '_blank');
+  };
+
+  return (
+    <div className="min-h-screen overflow-hidden bg-[#050816] text-white">
+      {/* Background Effects */}
+      <div className="pointer-events-none fixed inset-0 z-0">
+        <div className="absolute left-[-10%] top-[8%] h-72 w-72 rounded-full bg-[#d4af37]/20 blur-[100px]" />
+        <div className="absolute right-[-8%] top-[35%] h-96 w-96 rounded-full bg-fuchsia-500/20 blur-[120px]" />
+        <div className="absolute bottom-[-10%] left-[30%] h-96 w-96 rounded-full bg-cyan-400/10 blur-[120px]" />
+        <div className="noise absolute inset-0 opacity-[0.05]" />
+      </div>
+
+      {/* Navbar */}
+      <header className="fixed left-0 right-0 top-0 z-50 border-b border-white/10 bg-[#050816]/65 backdrop-blur-2xl">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="flex h-20 items-center justify-between">
+            <a href="#home" className="flex items-center gap-3" onClick={closeMenu}>
+              <div className="grid h-11 w-11 place-items-center rounded-2xl border border-[#d4af37]/40 bg-[#d4af37]/15 shadow-[0_0_35px_rgba(212,175,55,0.25)]">
+                <Sparkles className="text-[#d4af37]" size={22} />
+              </div>
+              <div>
+                <p className="text-lg font-black uppercase tracking-[0.15em] sm:text-xl">
+                  Jambe Balu
+                </p>
+                <p className="text-xs uppercase tracking-[0.35em] text-[#d4af37]">
+                  Entertainment
+                </p>
+              </div>
+            </a>
+
+            <nav className="hidden items-center gap-8 text-sm font-medium text-white/80 lg:flex">
+              {navLinks.map((link) => (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  className="relative transition hover:text-[#d4af37] after:absolute after:-bottom-2 after:left-0 after:h-px after:w-0 after:bg-[#d4af37] after:transition-all hover:after:w-full"
+                >
+                  {link.label}
+                </a>
+              ))}
+            </nav>
+
+            <div className="hidden items-center gap-3 lg:flex">
+              <a
+                href={`https://wa.me/${WHATSAPP_NUMBER}`}
+                target="_blank"
+                rel="noreferrer"
+                className="btn-shine inline-flex items-center gap-2 rounded-full bg-[#d4af37] px-5 py-3 text-sm font-bold text-[#111827] shadow-[0_0_35px_rgba(212,175,55,0.3)] transition hover:-translate-y-0.5 hover:brightness-110"
+              >
+                <MessageCircle size={18} />
+                Book Now
+              </a>
+            </div>
+
+            <button
+              onClick={() => setMenuOpen(!menuOpen)}
+              className="grid h-11 w-11 place-items-center rounded-xl border border-white/10 bg-white/5 lg:hidden"
+              aria-label="Toggle Menu"
+            >
+              {menuOpen ? <X size={23} /> : <Menu size={23} />}
+            </button>
+          </div>
+
+          {menuOpen && (
+            <div className="border-t border-white/10 py-5 lg:hidden">
+              <div className="grid gap-4">
+                {navLinks.map((link) => (
+                  <a
+                    key={link.href}
+                    href={link.href}
+                    onClick={closeMenu}
+                    className="rounded-xl px-3 py-2 text-white/80 hover:bg-white/10 hover:text-[#d4af37]"
+                  >
+                    {link.label}
+                  </a>
+                ))}
+
+                <a
+                  href={`https://wa.me/${WHATSAPP_NUMBER}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  onClick={closeMenu}
+                  className="inline-flex items-center justify-center gap-2 rounded-full bg-[#d4af37] px-5 py-3 font-bold text-[#111827]"
+                >
+                  <MessageCircle size={18} />
+                  Book Now
+                </a>
+              </div>
+            </div>
+          )}
+        </div>
+      </header>
+
+      {/* Hero */}
+      <section id="home" className="relative min-h-screen scroll-mt-24">
+        <div className="absolute inset-0">
+          <img
+            src="/images/hero_stage_crowd.jpg"
+            alt="Jambe Balu live event crowd and stage"
+            className="h-full w-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#050816] via-[#050816]/80 to-[#050816]/20" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#050816] via-transparent to-[#050816]/60" />
+        </div>
+
+        <div className="relative z-10 mx-auto flex min-h-screen max-w-7xl items-center px-4 pb-20 pt-32 sm:px-6 lg:px-8">
+          <div className="max-w-4xl">
+            <div className="hero-kicker mb-6 inline-flex items-center gap-3 rounded-full border border-[#d4af37]/30 bg-[#d4af37]/10 px-4 py-2 text-sm font-semibold uppercase tracking-[0.22em] text-[#d4af37] backdrop-blur-xl">
+              <Mic2 size={17} />
+              Premium Event Management
+            </div>
+
+            <h1 className="hero-title font-display text-5xl font-black leading-[0.95] tracking-tight sm:text-6xl lg:text-8xl">
+              Creating Events That People{' '}
+              <span className="text-gradient">Remember Forever</span>
+            </h1>
+
+            <p className="hero-copy mt-7 max-w-2xl text-base leading-8 text-white/78 sm:text-lg lg:text-xl">
+              Weddings, corporate events, concerts, private parties, stage production,
+              lighting, décor and complete event coordination — designed to impress your
+              guests from the first moment.
+            </p>
+
+            <div className="hero-actions mt-9 flex flex-col gap-4 sm:flex-row">
+              <a
+                href="#contact"
+                className="btn-shine inline-flex items-center justify-center gap-2 rounded-full bg-[#d4af37] px-7 py-4 font-bold text-[#111827] shadow-[0_0_45px_rgba(212,175,55,0.3)] transition hover:-translate-y-1 hover:brightness-110"
+              >
+                Plan Your Event
+                <ArrowRight size={19} />
+              </a>
+
+              <a
+                href="#gallery"
+                className="inline-flex items-center justify-center gap-2 rounded-full border border-white/15 bg-white/10 px-7 py-4 font-bold text-white backdrop-blur-xl transition hover:-translate-y-1 hover:bg-white/15"
+              >
+                View Gallery
+                <Camera size={19} />
+              </a>
+            </div>
+
+            <div className="hero-badge mt-10 grid max-w-2xl grid-cols-2 gap-4 sm:grid-cols-4">
+              {stats.map((stat) => {
+                const Icon = stat.icon;
+
+                return (
+                  <div
+                    key={stat.label}
+                    className="rounded-2xl border border-white/10 bg-white/[0.08] p-4 backdrop-blur-xl"
+                  >
+                    <Icon className="mb-3 text-[#d4af37]" size={21} />
+                    <p className="text-2xl font-black">{stat.value}</p>
+                    <p className="mt-1 text-xs uppercase tracking-[0.15em] text-white/60">
+                      {stat.label}
+                    </p>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+
+        <div className="absolute bottom-8 left-1/2 z-20 hidden -translate-x-1/2 text-xs uppercase tracking-[0.35em] text-white/45 sm:block">
+          Scroll to explore
+        </div>
+      </section>
+
+      {/* Marquee */}
+      <section className="relative z-10 border-y border-white/10 bg-white/[0.03] py-5 backdrop-blur-xl">
+        <div className="marquee overflow-hidden">
+          <div className="marquee-track flex gap-10 text-sm font-bold uppercase tracking-[0.3em] text-white/55">
+            {[
+              'Weddings',
+              'Corporate Events',
+              'Concerts',
+              'Stage Design',
+              'LED Walls',
+              'DJ Nights',
+              'Private Parties',
+              'Decor Styling',
+              'Lighting',
+              'Exhibitions',
+              'Sound Production',
+              'Event Coordination',
+            ].map((item) => (
+              <span key={item} className="flex items-center gap-10">
+                {item}
+                <Sparkles className="text-[#d4af37]" size={16} />
+              </span>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* About */}
+      <section id="about" className="relative z-10 scroll-mt-24 py-24 sm:py-28">
+        <div className="mx-auto grid max-w-7xl items-center gap-14 px-4 sm:px-6 lg:grid-cols-2 lg:px-8">
+          <div className="reveal">
+            <p className="section-kicker">About Jambe Balu</p>
+            <h2 className="section-title mt-3">
+              We Turn Simple Occasions Into Spectacular Experiences.
+            </h2>
+            <p className="mt-6 text-lg leading-8 text-white/70">
+              Jambe Balu Entertainment is focused on delivering high-impact events with
+              premium planning, stylish decoration, stage production, lighting effects,
+              music, and smooth on-ground coordination.
+            </p>
+            <p className="mt-5 text-lg leading-8 text-white/70">
+              Whether it is a wedding, corporate event, private party, exhibition, or live
+              entertainment night, our team creates an atmosphere that feels organized,
+              energetic, and visually unforgettable.
+            </p>
+
+            <div className="mt-8 grid gap-4 sm:grid-cols-2">
+              {[
+                'Creative event concepts',
+                'Complete technical production',
+                'Premium decoration styling',
+                'Smooth guest experience',
+              ].map((item) => (
+                <div key={item} className="flex items-center gap-3 text-white/80">
+                  <CheckCircle2 className="text-[#d4af37]" size={20} />
+                  {item}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="reveal-scale relative">
+            <div className="absolute -inset-4 rounded-[2rem] bg-gradient-to-br from-[#d4af37]/25 via-fuchsia-500/10 to-cyan-400/10 blur-2xl" />
+
+            <div className="relative grid grid-cols-2 gap-4">
+              <img
+                src="/images/Owner%20of%20Jambe%20Balu.jpg"
+                alt="Owner of Jambe Balu"
+                className="h-72 w-full rounded-[2rem] object-cover shadow-2xl"
+              />
+              <img
+                src="/images/stage_truss_rig.jpg"
+                alt="Stage truss rig"
+                className="mt-10 h-72 w-full rounded-[2rem] object-cover shadow-2xl"
+              />
+              <div className="col-span-2 rounded-[2rem] border border-white/10 bg-white/[0.06] p-6 backdrop-blur-xl">
+                <div className="flex items-center gap-4">
+                  <div className="grid h-14 w-14 place-items-center rounded-2xl bg-[#d4af37]/15">
+                    <Users className="text-[#d4af37]" />
+                  </div>
+                  <div>
+                    <p className="text-2xl font-black">Trusted by Families & Brands</p>
+                    <p className="mt-1 text-white/60">
+                      From intimate celebrations to full-scale event productions.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Services */}
+      <section id="services" className="relative z-10 scroll-mt-24 bg-white/[0.025] py-24 sm:py-28">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="reveal mx-auto max-w-3xl text-center">
+            <p className="section-kicker">Our Services</p>
+            <h2 className="section-title mt-3">Everything Your Event Needs, In One Place.</h2>
+            <p className="mt-6 text-lg leading-8 text-white/65">
+              From concept to completion, we handle the details that make an event look
+              premium, feel smooth, and create a lasting impression.
+            </p>
+          </div>
+
+          <div className="mt-16 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {services.map((service) => {
+              const Icon = service.icon;
+
+              return (
+                <article
+                  key={service.title}
+                  className="reveal-scale glow-card group relative min-h-[420px] overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.05]"
+                >
+                  <img
+                    src={service.image}
+                    alt={service.title}
+                    className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-110"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#050816] via-[#050816]/65 to-transparent" />
+                  <div className="absolute inset-0 bg-black/15 transition group-hover:bg-black/0" />
+
+                  <div className="relative z-10 flex h-full flex-col justify-end p-7">
+                    <div className="mb-5 grid h-14 w-14 place-items-center rounded-2xl border border-[#d4af37]/30 bg-[#d4af37]/15 backdrop-blur-xl">
+                      <Icon className="text-[#d4af37]" size={26} />
+                    </div>
+
+                    <h3 className="text-2xl font-black">{service.title}</h3>
+                    <p className="mt-3 leading-7 text-white/75">{service.description}</p>
+
+                    <div className="mt-6 inline-flex items-center gap-2 text-sm font-bold uppercase tracking-[0.2em] text-[#d4af37]">
+                      Learn More
+                      <ArrowRight size={17} className="transition group-hover:translate-x-1" />
+                    </div>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* Gallery */}
+      <section id="gallery" className="relative z-10 scroll-mt-24 py-24 sm:py-28">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="reveal flex flex-col justify-between gap-8 md:flex-row md:items-end">
+            <div className="max-w-3xl">
+              <p className="section-kicker">Event Gallery</p>
+              <h2 className="section-title mt-3">A Visual Glimpse Of Our Work.</h2>
+            </div>
+            <p className="max-w-md text-lg leading-8 text-white/65">
+              Powerful stage moments, elegant décor, premium production, and celebrations
+              designed to attract attention.
+            </p>
+          </div>
+
+          <div className="mt-14 grid auto-rows-[260px] gap-5 md:grid-cols-2 lg:grid-cols-4">
+            {gallery.map((item) => (
+              <div
+                key={item.src}
+                className={`reveal-scale group relative overflow-hidden rounded-[2rem] border border-white/10 bg-white/5 ${item.className}`}
+              >
+                <img
+                  src={item.src}
+                  alt={item.title}
+                  className="h-full w-full object-cover transition duration-700 group-hover:scale-110"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent opacity-80" />
+                <div className="absolute bottom-0 left-0 right-0 p-6">
+                  <p className="text-xl font-black">{item.title}</p>
+                  <p className="mt-1 text-sm text-white/60">Jambe Balu Entertainment</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="relative z-10 px-4 py-10 sm:px-6 lg:px-8">
+        <div className="reveal mx-auto max-w-7xl overflow-hidden rounded-[2.5rem] border border-[#d4af37]/20 bg-gradient-to-br from-[#d4af37]/20 via-white/[0.06] to-fuchsia-500/10 p-8 shadow-[0_0_80px_rgba(212,175,55,0.12)] sm:p-12 lg:p-16">
+          <div className="grid items-center gap-10 lg:grid-cols-[1.3fr_0.7fr]">
+            <div>
+              <p className="section-kicker">Ready To Celebrate?</p>
+              <h2 className="font-display mt-3 text-4xl font-black leading-tight sm:text-5xl">
+                Let’s Create An Event That Brings You More Attention.
+              </h2>
+              <p className="mt-5 max-w-2xl text-lg leading-8 text-white/70">
+                Tell us your event idea. We will help with planning, styling, production,
+                and complete execution.
+              </p>
+            </div>
+
+            <div className="flex flex-col gap-4">
+              <a
+                href="#contact"
+                className="btn-shine inline-flex items-center justify-center gap-2 rounded-full bg-[#d4af37] px-7 py-4 font-bold text-[#111827] transition hover:-translate-y-1 hover:brightness-110"
+              >
+                Send Inquiry
+                <ArrowRight size={19} />
+              </a>
+              <a
+                href={`https://wa.me/${WHATSAPP_NUMBER}`}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center justify-center gap-2 rounded-full border border-white/15 bg-white/10 px-7 py-4 font-bold text-white backdrop-blur-xl transition hover:-translate-y-1 hover:bg-white/15"
+              >
+                WhatsApp Us
+                <MessageCircle size={19} />
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials */}
+      <section id="testimonials" className="relative z-10 scroll-mt-24 py-24 sm:py-28">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="reveal mx-auto max-w-3xl text-center">
+            <p className="section-kicker">Client Reviews</p>
+            <h2 className="section-title mt-3">What Clients Say About Us.</h2>
+          </div>
+
+          <div className="mt-14 grid gap-6 lg:grid-cols-3">
+            {testimonials.map((item) => (
+              <div
+                key={item.name}
+                className="reveal-scale rounded-[2rem] border border-white/10 bg-white/[0.055] p-7 backdrop-blur-xl"
+              >
+                <div className="mb-5 flex gap-1">
+                  {[...Array(5)].map((_, index) => (
+                    <Star key={index} size={19} className="fill-[#d4af37] text-[#d4af37]" />
+                  ))}
+                </div>
+
+                <p className="text-lg leading-8 text-white/78">“{item.text}”</p>
+
+                <div className="mt-7 border-t border-white/10 pt-5">
+                  <p className="font-black">{item.name}</p>
+                  <p className="mt-1 text-sm text-[#d4af37]">{item.event}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Contact */}
+      <section id="contact" className="relative z-10 scroll-mt-24 bg-white/[0.025] py-24 sm:py-28">
+        <div className="mx-auto grid max-w-7xl gap-12 px-4 sm:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:px-8">
+          <div className="reveal">
+            <p className="section-kicker">Contact Us</p>
+            <h2 className="section-title mt-3">Let’s Plan Your Next Big Moment.</h2>
+            <p className="mt-6 text-lg leading-8 text-white/65">
+              Share your event details and our team will connect with you. For faster
+              response, use WhatsApp booking.
+            </p>
+
+            <div className="mt-10 space-y-5">
+              <a
+                href="mailto:balurobin@gmail.com"
+                className="flex items-start gap-4 rounded-2xl border border-white/10 bg-white/[0.05] p-5 transition hover:border-[#d4af37]/40"
+              >
+                <Mail className="mt-1 text-[#d4af37]" size={22} />
+                <div>
+                  <p className="font-black">Email</p>
+                  <p className="mt-1 text-white/65">balurobin@gmail.com</p>
+                </div>
+              </a>
+
+             <a
+  href="tel:+919741293742"
+  className="flex items-start gap-4 rounded-2xl border border-white/10 bg-white/[0.05] p-5 transition hover:border-[#d4af37]/40"
+>
+  <Phone className="mt-1 text-[#d4af37]" size={22} />
+  <div>
+    <p className="font-black">Phone</p>
+    <p className="mt-1 text-white/65">+91 97412 93742</p>
+  </div>
+</a>
+
+              <div className="flex items-start gap-4 rounded-2xl border border-white/10 bg-white/[0.05] p-5">
+                <MapPin className="mt-1 text-[#d4af37]" size={22} />
+                <div>
+                  <p className="font-black">Location</p>
+                  <p className="mt-1 text-white/65">Bangalore, India</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="reveal-scale rounded-[2rem] border border-white/10 bg-[#050816]/80 p-6 shadow-2xl backdrop-blur-xl sm:p-8">
+            <form onSubmit={handleSubmit} className="grid gap-5">
+              <div className="grid gap-5 sm:grid-cols-2">
+                <div>
+                  <label className="mb-2 block text-sm font-medium text-white/70">
+                    Full Name
+                  </label>
+                  <input
+                    name="name"
+                    type="text"
+                    required
+                    placeholder="Enter your name"
+                    className="form-field"
+                  />
+                </div>
+
+                <div>
+                  <label className="mb-2 block text-sm font-medium text-white/70">
+                    Phone Number
+                  </label>
+                  <input
+                    name="phone"
+                    type="tel"
+                    required
+                    placeholder="Enter phone number"
+                    className="form-field"
+                  />
+                </div>
+              </div>
+
+              <div className="grid gap-5 sm:grid-cols-2">
+                <div>
+                  <label className="mb-2 block text-sm font-medium text-white/70">
+                    Email
+                  </label>
+                  <input
+                    name="email"
+                    type="email"
+                    placeholder="Enter your email"
+                    className="form-field"
+                  />
+                </div>
+
+                <div>
+                  <label className="mb-2 block text-sm font-medium text-white/70">
+                    Event Type
+                  </label>
+                  <select name="eventType" className="form-field">
+                    <option>Wedding</option>
+                    <option>Corporate Event</option>
+                    <option>Private Party</option>
+                    <option>Concert / DJ Night</option>
+                    <option>Decoration & Styling</option>
+                    <option>Stage & Production</option>
+                    <option>Other</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label className="mb-2 block text-sm font-medium text-white/70">
+                  Message
+                </label>
+                <textarea
+                  name="message"
+                  rows={6}
+                  placeholder="Tell us about your event, date, venue and expected guests"
+                  className="form-field resize-none"
+                />
+              </div>
+
+              <button
+                type="submit"
+                className="btn-shine inline-flex items-center justify-center gap-2 rounded-full bg-[#d4af37] px-7 py-4 font-black text-[#111827] transition hover:-translate-y-1 hover:brightness-110"
+              >
+                Send Inquiry On WhatsApp
+                <MessageCircle size={19} />
+              </button>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="relative z-10 border-t border-white/10 bg-[#050816]">
+        <div className="mx-auto flex max-w-7xl flex-col gap-6 px-4 py-10 sm:px-6 md:flex-row md:items-center md:justify-between lg:px-8">
+          <div>
+            <p className="text-lg font-black uppercase tracking-[0.18em]">Jambe Balu</p>
+            <p className="mt-1 text-sm uppercase tracking-[0.3em] text-[#d4af37]">
+              Entertainment
+            </p>
+          </div>
+
+          <p className="text-sm text-white/50">
+            © 2026 Jambe Balu Event Management. All rights reserved.
+          </p>
+
+          <div className="flex gap-5 text-sm text-white/60">
+            <a href="#home" className="hover:text-[#d4af37]">
+              Home
+            </a>
+            <a href="#services" className="hover:text-[#d4af37]">
+              Services
+            </a>
+            <a href="#contact" className="hover:text-[#d4af37]">
+              Contact
+            </a>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+}
+
+export default App;
