@@ -23,17 +23,22 @@ import {
   Users,
   CheckCircle2,
   Mic2,
+  Play,
+  Youtube,
+  ExternalLink,
 } from 'lucide-react';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const WHATSAPP_NUMBER = '919741293742'; 
+const WHATSAPP_NUMBER = '919741293742';
+const YOUTUBE_CHANNEL_URL = 'https://www.youtube.com/@Jambe_Balu/videos';
 
 const navLinks = [
   { label: 'Home', href: '#home' },
   { label: 'About', href: '#about' },
   { label: 'Services', href: '#services' },
   { label: 'Gallery', href: '#gallery' },
+  { label: 'Videos', href: '#videos' },
   { label: 'Testimonials', href: '#testimonials' },
   { label: 'Contact', href: '#contact' },
 ];
@@ -121,6 +126,110 @@ const gallery = [
   },
 ];
 
+/** Videos from https://www.youtube.com/@Jambe_Balu/videos */
+const videos = [
+  {
+    id: 'vBbzkfIzjJc',
+    title: 'Balu Jambe Team Indian Folk Band — Part 5',
+  },
+  {
+    id: 'facwT7aLrZw',
+    title: 'Balu Jambe Team Indian Folk Band — Part 4',
+  },
+  {
+    id: '3E9tqMZjrII',
+    title: 'Balu Jambe Team Indian Folk Band — Part 3',
+  },
+  {
+    id: 'FEYDkWoxW6s',
+    title: 'Balu Jambe Team Indian Folk Band — Part 2',
+  },
+  {
+    id: 'z4Oqg-UG0V0',
+    title: 'Balu Jambe Team Indian Folk Band — Part 1',
+  },
+  {
+    id: '9k_CE1FyBz4',
+    title: 'Balu Jambe Team Indian Folk Band',
+  },
+  {
+    id: 'JOrm07iiQ2E',
+    title: 'Town Hall Program — Bangalore',
+  },
+  {
+    id: 'JLFqrDy5Xak',
+    title: 'Town Hall Program Highlights',
+  },
+  {
+    id: 'eXIe3LQYU_k',
+    title: 'Balu Jambe Events',
+  },
+  {
+    id: 'PUFPxaBHZgI',
+    title: 'Jambe Zalak — Balu Jambe Events',
+  },
+  {
+    id: '5YAvwtECAzI',
+    title: 'Balu Jambe Live Events',
+  },
+  {
+    id: 'JJk1mSASzo8',
+    title: 'Balu Jambe Events — Arun Singing',
+  },
+  {
+    id: 'FOBWu87SoJE',
+    title: 'Bhoomi Habba Vistar — Folk Band & Jambe Zalak',
+  },
+  {
+    id: 'VRWRFVxPjIg',
+    title: 'Bhoomi Habba Vistar — Program Highlights',
+  },
+  {
+    id: 'cXvmxjM6dp0',
+    title: 'Sahakaranagara Event — Arun Vechi',
+  },
+  {
+    id: 'D6mzFheNLWw',
+    title: 'Bhoomi Habba Vistar — Folk Band Performance',
+  },
+  {
+    id: 'f5M1WDvzjo4',
+    title: 'Mari Kunitha — Balu Jambe, Ramesh, Gowtham',
+  },
+  {
+    id: '0NYh0jxDDOE',
+    title: 'Jambe Balu — Chandana TV Live',
+  },
+  {
+    id: 'BCFq-3eJ0_s',
+    title: 'Jambe Performing',
+  },
+  {
+    id: 'cKT_TKwFqHU',
+    title: 'Indian Folk Performance',
+  },
+  {
+    id: 'OH51znpSlos',
+    title: 'Indian Folk — Fire Show',
+  },
+  {
+    id: 'aTDVY5Vlylo',
+    title: 'Indian Folk — Fire Show Highlights',
+  },
+  {
+    id: 'zyd6Zn9ol8o',
+    title: 'Indian Folk — Balu Jambe',
+  },
+  {
+    id: 'tWlYc9Sye9I',
+    title: 'Indian Folk — Balu Jambe Live',
+  },
+].map((video) => ({
+  ...video,
+  poster: `https://i.ytimg.com/vi/${video.id}/hqdefault.jpg`,
+  type: 'youtube' as const,
+}));
+
 const testimonials = [
   {
     name: 'Amina & Khalid',
@@ -164,8 +273,25 @@ const stats = [
 
 function App() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [activeVideo, setActiveVideo] = useState<(typeof videos)[number] | null>(null);
 
   const closeMenu = () => setMenuOpen(false);
+
+  useEffect(() => {
+    if (!activeVideo) return;
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setActiveVideo(null);
+    };
+
+    document.body.style.overflow = 'hidden';
+    window.addEventListener('keydown', onKeyDown);
+
+    return () => {
+      document.body.style.overflow = '';
+      window.removeEventListener('keydown', onKeyDown);
+    };
+  }, [activeVideo]);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -580,6 +706,129 @@ function App() {
           </div>
         </div>
       </section>
+
+      {/* Videos — YouTube channel */}
+      <section id="videos" className="relative z-10 scroll-mt-24 bg-white/[0.025] py-24 sm:py-28">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="reveal flex flex-col justify-between gap-8 md:flex-row md:items-end">
+            <div className="max-w-3xl">
+              <p className="section-kicker">YouTube Videos</p>
+              <h2 className="section-title mt-3">Watch Jambe Balu On Stage.</h2>
+              <p className="mt-5 text-lg leading-8 text-white/65">
+                Live folk band performances, jambe shows, and event highlights from our
+                official YouTube channel.
+              </p>
+            </div>
+
+            <a
+              href={YOUTUBE_CHANNEL_URL}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-6 py-3 text-sm font-bold text-white backdrop-blur-xl transition hover:-translate-y-0.5 hover:border-red-500/40 hover:bg-white/15"
+            >
+              <Youtube size={18} className="text-red-500" />
+              View Full Channel
+              <ExternalLink size={15} className="text-white/50" />
+            </a>
+          </div>
+
+          <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {videos.map((video) => (
+              <button
+                key={video.id}
+                type="button"
+                onClick={() => setActiveVideo(video)}
+                className="reveal-scale group relative overflow-hidden rounded-[1.75rem] border border-white/10 bg-white/[0.05] text-left transition hover:border-[#d4af37]/40"
+              >
+                <div className="relative aspect-video overflow-hidden bg-black/40">
+                  <img
+                    src={video.poster}
+                    alt={video.title}
+                    className="h-full w-full object-cover transition duration-700 group-hover:scale-110"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                  <div className="absolute inset-0 grid place-items-center">
+                    <div className="grid h-14 w-14 place-items-center rounded-full border border-[#d4af37]/40 bg-[#d4af37]/20 text-[#d4af37] shadow-[0_0_35px_rgba(212,175,55,0.35)] backdrop-blur-xl transition group-hover:scale-110 group-hover:bg-[#d4af37] group-hover:text-[#111827]">
+                      <Play size={24} className="ml-0.5 fill-current" />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="p-4">
+                  <p className="line-clamp-2 text-base font-bold leading-snug">{video.title}</p>
+                  <p className="mt-2 text-xs font-semibold uppercase tracking-[0.18em] text-[#d4af37]/80">
+                    Play on site
+                  </p>
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Video player modal */}
+      {activeVideo && (
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/85 p-4 backdrop-blur-md"
+          onClick={() => setActiveVideo(null)}
+          role="dialog"
+          aria-modal="true"
+          aria-label={activeVideo.title}
+        >
+          <div
+            className="relative w-full max-w-5xl overflow-hidden rounded-[1.5rem] border border-white/10 bg-[#050816] shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-start justify-between gap-4 border-b border-white/10 px-5 py-4">
+              <div className="min-w-0">
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#d4af37]">
+                  Jambe Balu · YouTube
+                </p>
+                <h3 className="mt-1 text-lg font-black sm:text-xl">{activeVideo.title}</h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => setActiveVideo(null)}
+                className="grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-white/10 bg-white/5 transition hover:bg-white/10"
+                aria-label="Close video"
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            <div className="aspect-video w-full bg-black">
+              <iframe
+                title={activeVideo.title}
+                src={`https://www.youtube.com/embed/${activeVideo.id}?autoplay=1&rel=0`}
+                className="h-full w-full"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+              />
+            </div>
+
+            <div className="flex items-center justify-between gap-3 border-t border-white/10 px-5 py-3">
+              <a
+                href={`https://www.youtube.com/watch?v=${activeVideo.id}`}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-2 text-sm font-semibold text-white/70 transition hover:text-red-400"
+              >
+                <Youtube size={16} className="text-red-500" />
+                Open on YouTube
+              </a>
+              <a
+                href={YOUTUBE_CHANNEL_URL}
+                target="_blank"
+                rel="noreferrer"
+                className="text-sm font-semibold text-[#d4af37] transition hover:brightness-110"
+              >
+                More videos →
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* CTA */}
       <section className="relative z-10 px-4 py-10 sm:px-6 lg:px-8">
