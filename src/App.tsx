@@ -276,6 +276,7 @@ function App() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeVideo, setActiveVideo] = useState<(typeof videos)[number] | null>(null);
   const [contactStatus, setContactStatus] = useState<string | null>(null);
+  const [emailDraft, setEmailDraft] = useState<{ subject: string; body: string } | null>(null);
 
   const closeMenu = () => setMenuOpen(false);
 
@@ -402,7 +403,14 @@ function App() {
     window.setTimeout(() => setContactStatus(null), 4000);
   };
 
-  /** Secondary path: open a pre-filled email draft to the business inbox. */
+  const buildGmailComposeUrl = (subject: string, body: string) =>
+    `https://mail.google.com/mail/?view=cm&fs=1&tf=1&to=${encodeURIComponent(CONTACT_EMAIL)}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+  /**
+   * Secondary path: open a pre-filled email draft.
+   * Prefer Gmail in the browser — mailto: often shows a system popup then does nothing
+   * when no desktop mail app is configured.
+   */
   const handleEmailInquiry = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     const form = e.currentTarget.form;
@@ -412,12 +420,23 @@ function App() {
     const fields = readInquiryFields(form);
     const body = buildInquiryMessage(fields);
     const subject = `Event inquiry: ${fields.eventType || 'General'} — ${fields.name || 'Website visitor'}`;
-    const url = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 
-    setContactStatus('Opening your email app with a draft to us…');
-    // mailto works more reliably via location.href than window.open
-    window.location.href = url;
-    window.setTimeout(() => setContactStatus(null), 5000);
+    setEmailDraft({ subject, body });
+    setContactStatus('Opening Gmail in your browser with a draft to us…');
+    openExternal(buildGmailComposeUrl(subject, body));
+    window.setTimeout(() => setContactStatus(null), 6000);
+  };
+
+  const handleCopyEnquiry = async () => {
+    if (!emailDraft) return;
+    const payload = `To: ${CONTACT_EMAIL}\nSubject: ${emailDraft.subject}\n\n${emailDraft.body}`;
+    try {
+      await navigator.clipboard.writeText(payload);
+      setContactStatus('Enquiry copied. Paste it into Zoho Mail, Gmail, or any mail app.');
+    } catch {
+      setContactStatus(`Could not copy automatically. Email us at ${CONTACT_EMAIL}`);
+    }
+    window.setTimeout(() => setContactStatus(null), 6000);
   };
 
   return (
@@ -1084,14 +1103,49 @@ function App() {
                   onClick={handleEmailInquiry}
                   className="inline-flex items-center justify-center gap-2 rounded-full border border-white/15 bg-white/[0.04] px-7 py-4 font-black text-white transition hover:-translate-y-1 hover:border-[#d4af37]/50 hover:bg-white/[0.07]"
                 >
-                  Send by Email
+                  Send by Email (Gmail)
                   <Mail size={19} className="text-[#d4af37]" />
                 </button>
 
                 <p className="text-center text-xs leading-5 text-white/45">
-                  WhatsApp is the fastest way to reach us. Email opens a draft to{' '}
-                  {CONTACT_EMAIL} if you prefer mail.
+                  WhatsApp is fastest. Email opens a Gmail draft to {CONTACT_EMAIL} in your
+                  browser — no desktop mail app required.
                 </p>
+
+                {emailDraft && (
+                  <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4 text-center text-xs leading-5 text-white/60">
+                    <p>
+                      Gmail didn&apos;t open?{' '}
+                      <button
+                        type="button"
+                        onClick={() =>
+                          openExternal(
+                            buildGmailComposeUrl(emailDraft.subject, emailDraft.body)
+                          )
+                        }
+                        className="font-semibold text-[#d4af37] underline-offset-2 hover:underline"
+                      >
+                        Try again
+                      </button>
+                      {' · '}
+                      <button
+                        type="button"
+                        onClick={handleCopyEnquiry}
+                        className="font-semibold text-[#d4af37] underline-offset-2 hover:underline"
+                      >
+                        Copy enquiry
+                      </button>
+                      {' · '}
+                      <a
+                        href={`mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(emailDraft.subject)}&body=${encodeURIComponent(emailDraft.body)}`}
+                        className="font-semibold text-[#d4af37] underline-offset-2 hover:underline"
+                      >
+                        System mail app
+                      </a>
+                    </p>
+                    <p className="mt-2 break-all text-white/45">{CONTACT_EMAIL}</p>
+                  </div>
+                )}
 
                 {contactStatus && (
                   <p className="rounded-2xl border border-[#d4af37]/30 bg-[#d4af37]/10 px-4 py-3 text-center text-sm font-medium text-[#d4af37]">
