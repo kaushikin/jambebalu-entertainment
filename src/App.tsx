@@ -31,7 +31,7 @@ import {
 gsap.registerPlugin(ScrollTrigger);
 
 const WHATSAPP_NUMBER = '919741293742';
-const CONTACT_EMAIL = 'jambaebalu_info@zohomail.in';
+const CONTACT_EMAIL = 'jambebalu_info@jambebaluentertainment.com';
 const YOUTUBE_CHANNEL_URL = 'https://www.youtube.com/@Jambe_Balu/videos';
 
 const navLinks = [
