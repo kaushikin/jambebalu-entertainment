@@ -912,13 +912,13 @@ function App() {
 
             <div className="mt-10 space-y-5">
               <a
-                href="mailto:balurobin@gmail.com"
+                href="mailto:jambaebalu_info@zohomail.in"
                 className="flex items-start gap-4 rounded-2xl border border-white/10 bg-white/[0.05] p-5 transition hover:border-[#d4af37]/40"
               >
                 <Mail className="mt-1 text-[#d4af37]" size={22} />
                 <div>
                   <p className="font-black">Email</p>
-                  <p className="mt-1 text-white/65">balurobin@gmail.com</p>
+                  <p className="mt-1 text-white/65">jambaebalu_info@zohomail.in</p>
                 </div>
               </a>
 
