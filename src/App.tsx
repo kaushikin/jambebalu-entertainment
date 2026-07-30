@@ -39,7 +39,8 @@ const navLinks = [
   { label: 'About', href: '#about' },
   { label: 'Services', href: '#services' },
   { label: 'Gallery', href: '#gallery' },
-  { label: 'Videos', href: '#videos' },
+  { label: 'Event Films', href: '#event-films' },
+  { label: 'YouTube', href: '#videos' },
   { label: 'Testimonials', href: '#testimonials' },
   { label: 'Contact', href: '#contact' },
 ];
@@ -251,6 +252,91 @@ const videos = [
   type: 'youtube' as const,
 }));
 
+/**
+ * Hard-disk event films:
+ * - Cinema clips with natural sound
+ * - Drone / wide visuals (often silent on disk — still great for production showcase)
+ */
+const eventFilms = [
+  {
+    id: 'stage_singer',
+    src: '/videos/stage_singer.mp4',
+    poster: '/videos/stage_singer.jpg',
+    title: 'Stage Performance · LED Wall',
+    tag: 'Stage · sound',
+  },
+  {
+    id: 'stage_awards',
+    src: '/videos/stage_awards.mp4',
+    poster: '/videos/stage_awards.jpg',
+    title: 'Corporate Stage Awards Night',
+    tag: 'Corporate · sound',
+  },
+  {
+    id: 'live_audience',
+    src: '/videos/live_audience.mp4',
+    poster: '/videos/live_audience.jpg',
+    title: 'Live Audience Energy',
+    tag: 'Crowd · sound',
+  },
+  {
+    id: 'party_crowd',
+    src: '/videos/party_crowd.mp4',
+    poster: '/videos/party_crowd.jpg',
+    title: 'Night Party · Full Crowd',
+    tag: 'Party · sound',
+  },
+  {
+    id: 'outdoor_dance',
+    src: '/videos/outdoor_dance.mp4',
+    poster: '/videos/outdoor_dance.jpg',
+    title: 'Outdoor Dance Celebration',
+    tag: 'Dance · sound',
+  },
+  {
+    id: 'reception_dance',
+    src: '/videos/reception_dance.mp4',
+    poster: '/videos/reception_dance.jpg',
+    title: 'Reception Dance Floor',
+    tag: 'Reception · sound',
+  },
+  {
+    id: 'drone_party_overview',
+    src: '/videos/drone_party_overview.mp4',
+    poster: '/videos/drone_party_overview.jpg',
+    title: 'Drone · Outdoor Party Overview',
+    tag: 'Drone',
+  },
+  {
+    id: 'drone_dinner_led',
+    src: '/videos/drone_dinner_led.mp4',
+    poster: '/videos/drone_dinner_led.jpg',
+    title: 'Drone · Dinner Event + LED',
+    tag: 'Drone',
+  },
+  {
+    id: 'drone_arch_entrance',
+    src: '/videos/drone_arch_entrance.mp4',
+    poster: '/videos/drone_arch_entrance.jpg',
+    title: 'Drone · Lighting Arch Entrance',
+    tag: 'Drone',
+  },
+  {
+    id: 'drone_aerial_sweep',
+    src: '/videos/drone_aerial_sweep.mp4',
+    poster: '/videos/drone_aerial_sweep.jpg',
+    title: 'Drone · Aerial Sweep',
+    tag: 'Drone',
+  },
+  {
+    id: 'drone_lawn_setup',
+    src: '/videos/drone_lawn_setup.mp4',
+    poster: '/videos/drone_lawn_setup.jpg',
+    title: 'Lawn Setup · Lights & LED Wall',
+    tag: 'Production',
+  },
+];
+
 const testimonials = [
   {
     name: 'Amina & Khalid',
@@ -295,16 +381,24 @@ const stats = [
 function App() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeVideo, setActiveVideo] = useState<(typeof videos)[number] | null>(null);
+  const [activeEventFilm, setActiveEventFilm] = useState<(typeof eventFilms)[number] | null>(
+    null
+  );
   const [contactStatus, setContactStatus] = useState<string | null>(null);
   const [emailDraft, setEmailDraft] = useState<{ subject: string; body: string } | null>(null);
 
   const closeMenu = () => setMenuOpen(false);
 
+  const anyVideoOpen = Boolean(activeVideo || activeEventFilm);
+
   useEffect(() => {
-    if (!activeVideo) return;
+    if (!anyVideoOpen) return;
 
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') setActiveVideo(null);
+      if (event.key === 'Escape') {
+        setActiveVideo(null);
+        setActiveEventFilm(null);
+      }
     };
 
     document.body.style.overflow = 'hidden';
@@ -314,7 +408,7 @@ function App() {
       document.body.style.overflow = '';
       window.removeEventListener('keydown', onKeyDown);
     };
-  }, [activeVideo]);
+  }, [anyVideoOpen]);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -839,6 +933,61 @@ function App() {
         </div>
       </section>
 
+      {/* Event films — from client hard disk (compressed for web) */}
+      <section id="event-films" className="relative z-10 scroll-mt-24 py-24 sm:py-28">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="reveal flex flex-col justify-between gap-8 md:flex-row md:items-end">
+            <div className="max-w-3xl">
+              <p className="section-kicker">Event Films · From Our Hard Drive</p>
+              <h2 className="section-title mt-3">Real Event Footage.</h2>
+              <p className="mt-5 text-lg leading-8 text-white/65">
+                Cinema clips with natural sound, plus drone overviews of parties, LED dinners,
+                lighting arches, and lawn production. Tap any card to play here.
+              </p>
+            </div>
+            <p className="max-w-sm text-sm leading-6 text-white/45">
+              Tags marked “sound” have event audio — turn volume up. Drone shots are mostly
+              silent (camera recorded without mic).
+            </p>
+          </div>
+
+          <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {eventFilms.map((film) => (
+              <button
+                key={film.id}
+                type="button"
+                onClick={() => setActiveEventFilm(film)}
+                className="reveal-scale group relative overflow-hidden rounded-[1.75rem] border border-white/10 bg-white/[0.05] text-left transition hover:border-[#d4af37]/40"
+              >
+                <div className="relative aspect-video overflow-hidden bg-black/40">
+                  <img
+                    src={film.poster}
+                    alt={film.title}
+                    className="h-full w-full object-cover transition duration-700 group-hover:scale-110"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                  <div className="absolute left-3 top-3 rounded-full border border-white/15 bg-black/40 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-[#d4af37] backdrop-blur-md">
+                    {film.tag}
+                  </div>
+                  <div className="absolute inset-0 grid place-items-center">
+                    <div className="grid h-14 w-14 place-items-center rounded-full border border-[#d4af37]/40 bg-[#d4af37]/20 text-[#d4af37] shadow-[0_0_35px_rgba(212,175,55,0.35)] backdrop-blur-xl transition group-hover:scale-110 group-hover:bg-[#d4af37] group-hover:text-[#111827]">
+                      <Play size={24} className="ml-0.5 fill-current" />
+                    </div>
+                  </div>
+                </div>
+                <div className="p-4">
+                  <p className="line-clamp-2 text-base font-bold leading-snug">{film.title}</p>
+                  <p className="mt-2 text-xs font-semibold uppercase tracking-[0.18em] text-[#d4af37]/80">
+                    Play on this site
+                  </p>
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Videos — YouTube channel */}
       <section id="videos" className="relative z-10 scroll-mt-24 bg-white/[0.025] py-24 sm:py-28">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -899,7 +1048,59 @@ function App() {
         </div>
       </section>
 
-      {/* Video player modal */}
+      {/* Local event film player */}
+      {activeEventFilm && (
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/85 p-4 backdrop-blur-md"
+          onClick={() => setActiveEventFilm(null)}
+          role="dialog"
+          aria-modal="true"
+          aria-label={activeEventFilm.title}
+        >
+          <div
+            className="relative w-full max-w-5xl overflow-hidden rounded-[1.5rem] border border-white/10 bg-[#050816] shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-start justify-between gap-4 border-b border-white/10 px-5 py-4">
+              <div className="min-w-0">
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#d4af37]">
+                  Event Film · {activeEventFilm.tag}
+                </p>
+                <h3 className="mt-1 text-lg font-black sm:text-xl">{activeEventFilm.title}</h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => setActiveEventFilm(null)}
+                className="grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-white/10 bg-white/5 transition hover:bg-white/10"
+                aria-label="Close video"
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            <div className="aspect-video w-full bg-black">
+              <video
+                key={activeEventFilm.src}
+                className="h-full w-full"
+                src={activeEventFilm.src}
+                poster={activeEventFilm.poster}
+                controls
+                autoPlay
+                playsInline
+                preload="auto"
+              >
+                Your browser does not support video playback.
+              </video>
+            </div>
+
+            <div className="border-t border-white/10 px-5 py-3 text-sm text-white/55">
+              Natural event audio · if silent, check Mac/browser volume is not muted
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* YouTube video player modal */}
       {activeVideo && (
         <div
           className="fixed inset-0 z-[100] flex items-center justify-center bg-black/85 p-4 backdrop-blur-md"
