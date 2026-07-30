@@ -91,12 +91,12 @@ const services = [
 const gallery = [
   {
     src: '/images/hero_stage_crowd.jpg',
-    title: 'Live Event Production',
+    title: 'Outdoor Event Production',
     className: 'lg:col-span-2 lg:row-span-2',
   },
   {
     src: '/images/wedding_stage_couple.jpg',
-    title: 'Wedding Stage',
+    title: 'Live Stage & LED Wall',
     className: '',
   },
   {
@@ -106,23 +106,43 @@ const gallery = [
   },
   {
     src: '/images/dj_crowd.jpg',
-    title: 'DJ Night',
+    title: 'LED Dance Night',
     className: 'lg:row-span-2',
   },
   {
     src: '/images/exhibition_hall.jpg',
-    title: 'Exhibition Setup',
+    title: 'Cultural Folk Entrance',
     className: '',
   },
   {
     src: '/images/decor_tablescape.jpg',
-    title: 'Decor Styling',
+    title: 'Outdoor Décor & Lighting',
     className: '',
   },
   {
     src: '/images/private_party_crowd.jpg',
-    title: 'Private Party',
+    title: 'Private Party Energy',
+    className: '',
+  },
+  {
+    src: '/images/full_event_wide.jpg',
+    title: 'Lighting Arch Entrance',
+    className: '',
+  },
+  {
+    src: '/images/gallery_guests.jpg',
+    title: 'Guest Celebrations',
     className: 'lg:col-span-2',
+  },
+  {
+    src: '/images/stage_truss_rig.jpg',
+    title: 'VIP Red Carpet',
+    className: '',
+  },
+  {
+    src: '/images/gallery_red_carpet.jpg',
+    title: 'Event Walkway & Lights',
+    className: '',
   },
 ];
 
@@ -460,7 +480,7 @@ function App() {
         <div className="absolute inset-0">
           <img
             src="/images/hero_stage_crowd.jpg"
-            alt="Jambe Balu live event crowd and stage"
+            alt="Jambe Balu outdoor event stage production"
             className="h-full w-full object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-r from-[#050816] via-[#050816]/80 to-[#050816]/20" />
@@ -556,7 +576,7 @@ function App() {
         </div>
       </section>
 
-      {/* About */}
+      {/* About + Owner highlight */}
       <section id="about" className="relative z-10 scroll-mt-24 py-24 sm:py-28">
         <div className="mx-auto grid max-w-7xl items-center gap-14 px-4 sm:px-6 lg:grid-cols-2 lg:px-8">
           <div className="reveal">
@@ -593,26 +613,63 @@ function App() {
           <div className="reveal-scale relative">
             <div className="absolute -inset-4 rounded-[2rem] bg-gradient-to-br from-[#d4af37]/25 via-fuchsia-500/10 to-cyan-400/10 blur-2xl" />
 
-            <div className="relative grid grid-cols-2 gap-4">
-              <img
-                src="/images/Owner%20of%20Jambe%20Balu.jpg"
-                alt="Owner of Jambe Balu"
-                className="h-72 w-full rounded-[2rem] object-cover shadow-2xl"
-              />
-              <img
-                src="/images/stage_truss_rig.jpg"
-                alt="Stage truss rig"
-                className="mt-10 h-72 w-full rounded-[2rem] object-cover shadow-2xl"
-              />
-              <div className="col-span-2 rounded-[2rem] border border-white/10 bg-white/[0.06] p-6 backdrop-blur-xl">
+            <div className="relative space-y-4">
+              {/* Owner featured card */}
+              <div className="overflow-hidden rounded-[2rem] border border-[#d4af37]/35 bg-white/[0.06] shadow-2xl backdrop-blur-xl">
+                <div className="grid sm:grid-cols-[1.1fr_1fr]">
+                  <div className="relative min-h-[280px] sm:min-h-[340px]">
+                    <img
+                      src="/images/owner_jambe_balu.jpg"
+                      alt="Jambe Balu — Founder & Owner"
+                      className="absolute inset-0 h-full w-full object-cover object-top"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#050816] via-transparent to-transparent sm:bg-gradient-to-r" />
+                  </div>
+                  <div className="flex flex-col justify-center p-6 sm:p-8">
+                    <p className="text-xs font-bold uppercase tracking-[0.28em] text-[#d4af37]">
+                      Founder & Owner
+                    </p>
+                    <h3 className="mt-3 font-display text-3xl font-black tracking-tight sm:text-4xl">
+                      Jambe Balu
+                    </h3>
+                    <p className="mt-4 text-sm leading-7 text-white/70 sm:text-base">
+                      Leading every production with passion for live entertainment,
+                      cultural performances, and flawless on-ground execution.
+                    </p>
+                    <div className="mt-6 flex flex-wrap gap-2">
+                      <span className="rounded-full border border-[#d4af37]/30 bg-[#d4af37]/10 px-3 py-1 text-xs font-semibold text-[#d4af37]">
+                        Event Director
+                      </span>
+                      <span className="rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs font-semibold text-white/75">
+                        Stage & Folk Shows
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <img
+                  src="/images/full_event_wide.jpg"
+                  alt="Lighting arch décor"
+                  className="h-40 w-full rounded-[1.5rem] object-cover shadow-2xl sm:h-48"
+                />
+                <img
+                  src="/images/stage_truss_rig.jpg"
+                  alt="VIP red carpet arrival"
+                  className="h-40 w-full rounded-[1.5rem] object-cover shadow-2xl sm:h-48"
+                />
+              </div>
+
+              <div className="rounded-[1.5rem] border border-white/10 bg-white/[0.06] p-5 backdrop-blur-xl sm:p-6">
                 <div className="flex items-center gap-4">
-                  <div className="grid h-14 w-14 place-items-center rounded-2xl bg-[#d4af37]/15">
+                  <div className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-[#d4af37]/15">
                     <Users className="text-[#d4af37]" />
                   </div>
                   <div>
-                    <p className="text-2xl font-black">Trusted by Families & Brands</p>
-                    <p className="mt-1 text-white/60">
-                      From intimate celebrations to full-scale event productions.
+                    <p className="text-xl font-black sm:text-2xl">Trusted by Families & Brands</p>
+                    <p className="mt-1 text-sm text-white/60 sm:text-base">
+                      Real events from our productions — stages, décor, and celebrations.
                     </p>
                   </div>
                 </div>

@@ -1,0 +1,17 @@
+# Short clips worth compressing for website (NOT raw 1–6GB files)
+# Prefer: compress to 720p ~3–8MB H.264, or upload to YouTube and embed.
+
+## Drone / aerial event (best for hero loop after compress)
+/Volumes/9844533344/30-12-2025 BALU/hari/DJI_20251231204220_0232_D.MP4  (3.5 MB)
+/Volumes/9844533344/06-12-2025BALU/HECAM/DJI_20251206163319_0141_D.MP4  (7 MB)
+/Volumes/9844533344/06-12-2025BALU/HECAM/DJI_20251206193745_0211_D.MP4  (10.5 MB)
+/Volumes/9844533344/30-12-2025 BALU/DRONE-1/DJI_20251231233527_0111_D.MP4  (9.4 MB)
+
+## BEL Reception short clips (corporate / officers club event)
+/Volumes/9844533344/BEL RECEPTION 22-03-2026/P1138251.MP4  (~13 MB)
+/Volumes/9844533344/BEL RECEPTION 22-03-2026/P1138282.MP4  (~9 MB)
+/Volumes/9844533344/BEL RECEPTION 22-03-2026/P1138353.MP4  (~9 MB)
+
+## DO NOT put these on the website as-is
+/Volumes/9844533344/30-12-2025 BALU/VIDEO/31st ramesh/*.MP4  (2–6 GB each)
+/Volumes/9844533344/Candid Video/PRIVATE/M4ROOT/CLIP  (cinema raw)
