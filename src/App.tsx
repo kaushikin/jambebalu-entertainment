@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import type { FormEvent } from 'react';
+import type { FormEvent, MouseEvent } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import {
@@ -31,6 +31,7 @@ import {
 gsap.registerPlugin(ScrollTrigger);
 
 const WHATSAPP_NUMBER = '919741293742';
+const CONTACT_EMAIL = 'jambebalu_info@jambebaluentertainment.com';
 const YOUTUBE_CHANNEL_URL = 'https://www.youtube.com/@Jambe_Balu/videos';
 
 const navLinks = [
@@ -294,6 +295,8 @@ const stats = [
 function App() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeVideo, setActiveVideo] = useState<(typeof videos)[number] | null>(null);
+  const [contactStatus, setContactStatus] = useState<string | null>(null);
+  const [emailDraft, setEmailDraft] = useState<{ subject: string; body: string } | null>(null);
 
   const closeMenu = () => setMenuOpen(false);
 
@@ -369,19 +372,91 @@ function App() {
     return () => ctx.revert();
   }, []);
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const readInquiryFields = (form: HTMLFormElement) => {
+    const formData = new FormData(form);
+    const str = (key: string) => String(formData.get(key) ?? '').trim();
+
+    return {
+      name: str('name'),
+      phone: str('phone'),
+      email: str('email'),
+      eventType: str('eventType'),
+      message: str('message'),
+    };
+  };
+
+  const buildInquiryMessage = (fields: ReturnType<typeof readInquiryFields>) => {
+    const lines = [
+      'Hello Jambe Balu,',
+      '',
+      'I would like to enquire about an event.',
+      '',
+      `Name: ${fields.name}`,
+      `Phone: ${fields.phone}`,
+      `Email: ${fields.email || 'Not provided'}`,
+      `Event Type: ${fields.eventType}`,
+      `Message: ${fields.message || '—'}`,
+    ];
+    return lines.join('\n');
+  };
+
+  const openExternal = (url: string) => {
+    const win = window.open(url, '_blank', 'noopener,noreferrer');
+    if (!win) {
+      // Popup blocked — fall back to same-tab navigation
+      window.location.href = url;
+    }
+  };
+
+  /** Primary path: open WhatsApp with a filled enquiry. */
+  const handleWhatsAppInquiry = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const form = e.currentTarget;
+    if (!form.reportValidity()) return;
 
-    const formData = new FormData(e.currentTarget);
+    const fields = readInquiryFields(form);
+    const text = buildInquiryMessage(fields);
+    const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`;
 
-    const name = formData.get('name') || '';
-    const phone = formData.get('phone') || '';
-    const eventType = formData.get('eventType') || '';
-    const message = formData.get('message') || '';
+    setContactStatus('Opening WhatsApp with your enquiry…');
+    openExternal(url);
+    window.setTimeout(() => setContactStatus(null), 4000);
+  };
 
-    const whatsappMessage = `Hello Jambe Balu,%0A%0AI would like to enquire about an event.%0A%0AName: ${name}%0APhone: ${phone}%0AEvent Type: ${eventType}%0AMessage: ${message}`;
+  const buildGmailComposeUrl = (subject: string, body: string) =>
+    `https://mail.google.com/mail/?view=cm&fs=1&tf=1&to=${encodeURIComponent(CONTACT_EMAIL)}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 
-    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${whatsappMessage}`, '_blank');
+  /**
+   * Secondary path: open a pre-filled email draft.
+   * Prefer Gmail in the browser — mailto: often shows a system popup then does nothing
+   * when no desktop mail app is configured.
+   */
+  const handleEmailInquiry = (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    const form = e.currentTarget.form;
+    if (!form) return;
+    if (!form.reportValidity()) return;
+
+    const fields = readInquiryFields(form);
+    const body = buildInquiryMessage(fields);
+    const subject = `Event inquiry: ${fields.eventType || 'General'} — ${fields.name || 'Website visitor'}`;
+
+    setEmailDraft({ subject, body });
+    setContactStatus('Opening Gmail in your browser with a draft to us…');
+    openExternal(buildGmailComposeUrl(subject, body));
+    window.setTimeout(() => setContactStatus(null), 6000);
+  };
+
+  const handleCopyEnquiry = async () => {
+    if (!emailDraft) return;
+    const payload = `To: ${CONTACT_EMAIL}\nSubject: ${emailDraft.subject}\n\n${emailDraft.body}`;
+    try {
+      await navigator.clipboard.writeText(payload);
+      setContactStatus('Enquiry copied. Paste it into Zoho Mail, Gmail, or any mail app.');
+    } catch {
+      setContactStatus(`Could not copy automatically. Email us at ${CONTACT_EMAIL}`);
+    }
+    window.setTimeout(() => setContactStatus(null), 6000);
   };
 
   return (
@@ -963,19 +1038,19 @@ function App() {
             <p className="section-kicker">Contact Us</p>
             <h2 className="section-title mt-3">Let’s Plan Your Next Big Moment.</h2>
             <p className="mt-6 text-lg leading-8 text-white/65">
-              Share your event details and our team will connect with you. For faster
-              response, use WhatsApp booking.
+              Share your event details and our team will connect with you. WhatsApp is
+              the fastest way to book; email works if you prefer a written trail.
             </p>
 
             <div className="mt-10 space-y-5">
               <a
-                href="mailto:balurobin@gmail.com"
+                href={`mailto:${CONTACT_EMAIL}`}
                 className="flex items-start gap-4 rounded-2xl border border-white/10 bg-white/[0.05] p-5 transition hover:border-[#d4af37]/40"
               >
                 <Mail className="mt-1 text-[#d4af37]" size={22} />
                 <div>
                   <p className="font-black">Email</p>
-                  <p className="mt-1 text-white/65">balurobin@gmail.com</p>
+                  <p className="mt-1 text-white/65">{CONTACT_EMAIL}</p>
                 </div>
               </a>
 
@@ -1001,7 +1076,7 @@ function App() {
           </div>
 
           <div className="reveal-scale rounded-[2rem] border border-white/10 bg-[#050816]/80 p-6 shadow-2xl backdrop-blur-xl sm:p-8">
-            <form onSubmit={handleSubmit} className="grid gap-5">
+            <form onSubmit={handleWhatsAppInquiry} className="grid gap-5">
               <div className="grid gap-5 sm:grid-cols-2">
                 <div>
                   <label className="mb-2 block text-sm font-medium text-white/70">
@@ -1071,13 +1146,70 @@ function App() {
                 />
               </div>
 
-              <button
-                type="submit"
-                className="btn-shine inline-flex items-center justify-center gap-2 rounded-full bg-[#d4af37] px-7 py-4 font-black text-[#111827] transition hover:-translate-y-1 hover:brightness-110"
-              >
-                Send Inquiry On WhatsApp
-                <MessageCircle size={19} />
-              </button>
+              <div className="grid gap-3">
+                <button
+                  type="submit"
+                  className="btn-shine inline-flex items-center justify-center gap-2 rounded-full bg-[#d4af37] px-7 py-4 font-black text-[#111827] transition hover:-translate-y-1 hover:brightness-110"
+                >
+                  Send Inquiry on WhatsApp
+                  <MessageCircle size={19} />
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleEmailInquiry}
+                  className="inline-flex items-center justify-center gap-2 rounded-full border border-white/15 bg-white/[0.04] px-7 py-4 font-black text-white transition hover:-translate-y-1 hover:border-[#d4af37]/50 hover:bg-white/[0.07]"
+                >
+                  Send by Email (Gmail)
+                  <Mail size={19} className="text-[#d4af37]" />
+                </button>
+
+                <p className="text-center text-xs leading-5 text-white/45">
+                  WhatsApp is fastest. Email opens a Gmail draft to {CONTACT_EMAIL} in your
+                  browser — no desktop mail app required.
+                </p>
+
+                {emailDraft && (
+                  <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4 text-center text-xs leading-5 text-white/60">
+                    <p>
+                      Gmail didn&apos;t open?{' '}
+                      <button
+                        type="button"
+                        onClick={() =>
+                          openExternal(
+                            buildGmailComposeUrl(emailDraft.subject, emailDraft.body)
+                          )
+                        }
+                        className="font-semibold text-[#d4af37] underline-offset-2 hover:underline"
+                      >
+                        Try again
+                      </button>
+                      {' · '}
+                      <button
+                        type="button"
+                        onClick={handleCopyEnquiry}
+                        className="font-semibold text-[#d4af37] underline-offset-2 hover:underline"
+                      >
+                        Copy enquiry
+                      </button>
+                      {' · '}
+                      <a
+                        href={`mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(emailDraft.subject)}&body=${encodeURIComponent(emailDraft.body)}`}
+                        className="font-semibold text-[#d4af37] underline-offset-2 hover:underline"
+                      >
+                        System mail app
+                      </a>
+                    </p>
+                    <p className="mt-2 break-all text-white/45">{CONTACT_EMAIL}</p>
+                  </div>
+                )}
+
+                {contactStatus && (
+                  <p className="rounded-2xl border border-[#d4af37]/30 bg-[#d4af37]/10 px-4 py-3 text-center text-sm font-medium text-[#d4af37]">
+                    {contactStatus}
+                  </p>
+                )}
+              </div>
             </form>
           </div>
         </div>
